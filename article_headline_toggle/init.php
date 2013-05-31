@@ -35,6 +35,13 @@ class Article_Headline_Toggle extends Plugin {
     return "#headlines-frame > div > div.cdmHeader > span.titleWrap {"
          . " cursor: pointer;"
          . "}"
+         . "div.cdm.expandable.active div.cdmHeader a.title {"
+         . "color: black;"
+	       . "font-weight: bold;"
+         . "}"
+         . "span.collapseBtn {"
+         . "display: none;"
+	       . "}"
          ;
   }
 
@@ -61,14 +68,17 @@ class Article_Headline_Toggle extends Plugin {
       , ret = oldClicked.call(null, aEvent, aId)
       ;
 
-    if (!aEvent.ctrlKey && aEvent.target.id === titleId) {
+    var classNameMatch = ["title", "titleWrap", "cdmExcerpt"];
+    if (!aEvent.ctrlKey && classNameMatch.indexOf(aEvent.target.className) !== -1) {
       if (wasActive)
         cdmCollapseArticle(null, aId);
       else
         cdmExpandArticle(aId);
+    } else {
+        return ret;
     }
 
-    return ret;
+    return false;
   }
 
   window.cdmClicked = _cdmClicked;
